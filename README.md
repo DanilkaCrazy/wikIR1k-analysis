@@ -1,4 +1,4 @@
-## README.md – Theoretical and Mathematical Foundations
+## Theoretical and Mathematical Foundations
 
 ### Project Overview
 
