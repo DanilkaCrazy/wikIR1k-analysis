@@ -131,38 +131,52 @@ The analysis demonstrates fundamental statistical properties of natural language
 
 ---
 
-### 5. Morphological Processing Statistics
+## 5. Morphological Processing Statistics
 
-| Version              | Total tokens | Unique tokens | Avg token length |
-|----------------------|--------------|---------------|------------------|
-| Original (tokenized) | 73,093,729   | 794,568       | 4.80             |
-| Porter stemmer       | –            | –             | –                |
-| spaCy lemmatizer     | –            | –             | –                |
-| BERT tokenizer       | –            | –             | –                |
+To assess the impact of different morphological normalisation techniques, we processed a random subset of **10,000 documents** (approximately 2.7% of the full collection) – a size sufficient to capture stable statistical patterns while keeping computation tractable. The results are summarised in the table below.
 
-*Note: Actual numbers will be obtained after running the second notebook.*  
-- **Stemming** reduces unique tokens drastically, but may introduce conflations (e.g., different words becoming the same stem).
-- **Lemmatization** yields dictionary forms, often preserving more distinct forms than stemming.
-- **BERT tokenizer** produces a much larger number of tokens (subwords) and a different distribution of token lengths, reflecting its subword‑level encoding.
+| Version | Total tokens | Unique tokens | Avg token length |
+|---------|--------------|---------------|------------------|
+| Original (tokenized) | 1,977,300 | 92,481 | 4.79 |
+| Porter stemmer | 1,977,300 | 73,680 | 4.26 |
+| spaCy lemmatizer | 1,977,630 | 82,575 | 4.58 |
+| BERT tokenizer | 2,195,610 | 26,821 | 4.51 |
 
-These transformations have different trade‑offs in terms of vocabulary size, retrieval effectiveness, and computational cost.
+**Analysis and interpretation**
+
+The **Porter stemmer** reduces the number of unique tokens by about 20% (from 92 481 to 73 680). This reduction is achieved by conflating inflectional and derivational variants (e.g., *running*, *runs*, *ran* → *run*). The average token length drops from 4.79 to 4.26 characters because suffixes are trimmed. Such aggressive compression can improve retrieval efficiency and recall, but it may also merge semantically unrelated words (e.g., *university* and *universe* both become *univers*), potentially harming precision.
+
+**spaCy lemmatization** preserves 82 575 distinct lemmas – about 11% more than the stemmer. Lemmatisers use a dictionary and part‑of‑speech information to return the canonical dictionary form (e.g., *better* → *good*). Consequently, the vocabulary remains closer to natural language, which can be beneficial for query understanding. The average token length (4.58) is only slightly lower than the original, reflecting that lemmas are often real words.
+
+**BERT tokenisation** employs a subword‑level encoding (WordPiece) that splits rare or complex words into smaller, frequently‑occurring pieces (e.g., *unhappiness* → *un* + *##happiness*). This results in the largest total number of tokens (2 195 610) because each word may be divided into multiple pieces. However, the number of *unique* tokens drops dramatically to 26 821 – only about one third of the original unique word count. This demonstrates that subword units are highly reusable across different words. The average token length (4.51) is close to the original, but the distribution is shifted towards shorter, more frequent pieces.
+
+These three transformations illustrate the fundamental trade‑off in text representation for information retrieval:  
+
+- **Stemming** minimises vocabulary size at the cost of potentially losing semantic distinctions.  
+- **Lemmatisation** keeps the vocabulary linguistically plausible but requires more computational resources.  
+- **Subword tokenisation** (BERT) offers a compact yet expressive vocabulary that is well‑suited for neural retrieval models, though it produces a larger number of tokens overall.
+
+All three techniques effectively reduce the number of unique tokens compared to the raw tokenised text, which can lead to smaller indexes and better generalisation across word variants. The choice of method ultimately depends on the application’s balance between efficiency, effectiveness, and the nature of the downstream retrieval model.
 
 ---
 
 ## Summary of Code Output
 
-- **Basic statistics:**
-  - Documents: 369,721
-  - Total words: 73,093,729
-  - Average document length: 197.7 words
-  - Unique words: 794,568
-  - Average word length: 4.80 characters
-  - Average unique word length: 7.71 characters
+The analysis was performed on the **wikIR1k** dataset (369 721 documents). Basic statistics for the full collection:
 
-- **Frequency list:** Top word is “the” with 5,311,943 occurrences.
+- **Documents:** 369 721  
+- **Total words:** 73 093 729  
+- **Average document length:** 197.7 words  
+- **Unique words (types):** 794 568  
+- **Average word length (overall):** 4.80 characters  
+- **Average unique word length:** 7.71 characters  
 
-- **Stopword analysis:** 28 of the top‑30 words are in the stopword list; “first” and “also” are recommended additions.
+**Frequency list:** The most frequent word is *the* with 5 311 943 occurrences, followed by *of*, *in*, etc. – a typical Zipfian distribution.
 
-- **Bigram count:** 12,993,004 unique bigrams. The top bigrams are dominated by stopword combinations. After filtering, meaningful bigrams like “the first” and “one of” remain.
+**Stopword analysis:** Out of the top‑30 most frequent words, 28 appear in the standard stopword list; only *first* and *also* are absent. Together they account for over 40% of all word occurrences. Adding these two words to the stopword list would further reduce index size and may improve precision for general queries.
 
-- **Plots:** Both Zipf and Heaps laws are clearly satisfied, confirming the expected statistical behaviour of natural language.
+**Bigram count:** The collection contains **12 993 004 unique bigrams**. The most frequent bigrams are overwhelmingly composed of stopwords (e.g., *of the*, *in the*). After applying a simple filter (frequency > 5 and not consisting solely of stopwords), meaningful bigrams such as *the first* and *one of* remain, suggesting that a threshold‑based selection can identify valuable phrase‑level dictionary entries.
+
+**Plots:** Both Zipf’s law (rank vs. frequency on log‑log axes) and Heaps’ law (vocabulary growth on log‑log axes) are clearly satisfied, confirming the expected statistical behaviour of natural language. These empirical laws underpin many design decisions in search engines, such as index compression and vocabulary modelling.
+
+The morphological processing on the 10 000‑document subset further quantifies the effects of normalisation, providing a solid basis for understanding the trade‑offs in text representation for information retrieval systems.
