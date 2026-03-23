@@ -28,9 +28,9 @@ These statistics give a first impression of the collection’s size, richness, a
 
 Zipf’s law states that for a natural language corpus, the frequency of a word is inversely proportional to its rank in the frequency table:
 
-\[
+$$
 f(r) \propto \frac{1}{r^\alpha}
-\]
+$$
 
 
 where \(f(r)\) is the frequency of the \(r\)-th most frequent word, and \(\alpha\) is often close to 1. This relationship appears as a straight line on a log‑log plot. The law reflects the highly skewed distribution of word frequencies in language: a few words (like “the”, “of”) dominate, while most words occur very rarely. We plot rank vs. frequency on log‑log axes to verify the law.
@@ -41,9 +41,9 @@ where \(f(r)\) is the frequency of the \(r\)-th most frequent word, and \(\alpha
 
 Heaps’ law describes how the vocabulary size \(V\) grows as a function of the total number of tokens \(N\) in a collection:
 
-\[
+$$
 V = k \cdot N^{\beta}
-\]
+$$
 
 with \(0 < \beta < 1\) (typically \(\beta \approx 0.5\)). On a log‑log plot this is a linear relationship. The law captures the fact that as we add more text, new words continue to appear, but at a decreasing rate. It is important for estimating vocabulary growth and for designing efficient indexing structures.
 
