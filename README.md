@@ -2,7 +2,7 @@
 
 ### Project Overview
 
-This repository contains an analysis of the **wikIR1k** dataset, a collection of Wikipedia articles from the [WikiR project](https://github.com/getalp/wikiR). The data is already cleaned, tokenized, and lowercased, making it suitable for information retrieval experiments. The analysis follows the tasks outlined in **HA1.pdf**, covering basic collection statistics, word and bigram frequency distributions, Zipf’s and Heaps’ laws, and morphological processing (stemming, lemmatization, and BERT tokenization).
+This repository contains an analysis of the **wikIR1k** dataset, a collections of Wikipedia articles from the [WikiR project](https://github.com/getalp/wikiR), [wiklR1k](https://zenodo.org/records/3565761#.Xep7Z-ZKg5k). The data is already cleaned, tokenized, and lowercased, making it suitable for information retrieval experiments. The analysis follows the tasks outlined in **HA1.pdf**, covering basic collection statistics, word and bigram frequency distributions, Zipf’s and Heaps’ laws, and morphological processing (stemming, lemmatization, and BERT tokenization).
 
 ### Dataset Description
 
