@@ -29,9 +29,7 @@ These statistics give a first impression of the collection’s size, richness, a
 Zipf’s law states that for a natural language corpus, the frequency of a word is inversely proportional to its rank in the frequency table:
 
 \[
-
 f(r) \propto \frac{1}{r^\alpha}
-
 \]
 
 
